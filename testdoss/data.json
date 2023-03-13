@@ -1,56 +1,137 @@
-[
-    {
-      "niveau": "1",
-      "nomTechnicien": "Jean Dupont",
-      "vannes": [
-        {
-          "id": 1,
-          "repereFonctionnel": "Vanne principale",
-          "positionConstatee": "O",
-          "temperatureAmont": 28.5,
-          "temperatureAval": 27.2
-        },
-        {
-          "id": 2,
-          "repereFonctionnel": "Vanne secondaire",
-          "positionConstatee": "F",
-          "temperatureAmont": 28.9,
-          "temperatureAval": 29.3
-        },
-        {
-          "id": 3,
-          "repereFonctionnel": "Vanne de sécurité",
-          "positionConstatee": "SO",
-          "temperatureAmont": 29.2,
-          "temperatureAval": 28.8
-        }
-      ]
+[  {    
+  "tranche": "4",
+  "niveau": "1",   
+  "annexe_description": "Réaliser les relevés au niveau + 0.00 m",
+  "localisation_groupe": "entre les pompes CVI 001 à 004 PO et le condenseur. (M2C17)",
+  "nomTechnicien": "Jean Dupont",  
+  "vannes": [      
+    {        
+      "id": 1,        
+      "repereFonctionnel": "ABP 116 VL",        
+      "positionConstatee": "O",        
+      "positionAttendue": "O",        
+      "temperatureAmont": 28.5,        
+      "temperatureAval": 27.2,        
+      "temperatureAttendue": 28.0, 
+      "description": "Réglante secours condensats ABP 302 RE"     
+    },      
+    {        
+      "id": 2,        
+      "repereFonctionnel": "ABP 117 VL",        
+      "positionConstatee": "F",        
+      "positionAttendue": "O",        
+      "temperatureAmont": 28.9,       
+      "temperatureAval": 29.3,       
+      "temperatureAttendue": 29.0,   
+      "description": "Réglante secours condensats ABP 301 RE"    
+    },      
+    {        
+      "id": 3,        
+      "repereFonctionnel": "ABP 118 VL",        
+      "positionConstatee": "SO",        
+      "positionAttendue": "SF",        
+      "temperatureAmont": 29.2,        
+      "temperatureAval": 28.8,        
+      "temperatureAttendue": 30.0,
+      "description": "Soupape de sûreté condensats ABP 302 RE" 
+    },
+    {        
+      "id": 4,        
+      "repereFonctionnel": "ABP 116 VL",        
+      "positionConstatee": "O",        
+      "positionAttendue": "O",        
+      "temperatureAmont": 28.5,        
+      "temperatureAval": 27.2,        
+      "temperatureAttendue": 28.0,
+      "description": "Soupape de sûreté condensats ABP 301 RE"     
+    },      
+    {        
+      "id": 5,        
+      "repereFonctionnel": "ABP 117 VL",        
+      "positionConstatee": "F",        
+      "positionAttendue": "O",        
+      "temperatureAmont": 28.9,       
+      "temperatureAval": 29.3,       
+      "temperatureAttendue": 29.0,    
+      "description": "Réglante secours condensats ABP 202 RE"   
+    },      
+    {        
+      "id": 6,        
+      "repereFonctionnel": "ABP 118 VL",        
+      "positionConstatee": "SO",        
+      "positionAttendue": "SF",        
+      "temperatureAmont": 29.2,        
+      "temperatureAval": 28.8,        
+      "temperatureAttendue": 30.0,
+      "description": "Réglante secours condensats ABP 201 RE" 
+    },
+    {        
+      "id": 7,        
+      "repereFonctionnel": "ABP 116 VL",        
+      "positionConstatee": "O",        
+      "positionAttendue": "O",        
+      "temperatureAmont": 28.5,        
+      "temperatureAval": 27.2,        
+      "temperatureAttendue": 28.0,
+      "description": "Soupape de sûreté condensats ABP 202 RE"       
+    },      
+    {        
+      "id": 8,        
+      "repereFonctionnel": "ABP 117 VL",        
+      "positionConstatee": "F",        
+      "positionAttendue": "O",        
+      "temperatureAmont": 28.9,       
+      "temperatureAval": 29.3,       
+      "temperatureAttendue": 29.0,
+      "description": "Soupape de sûreté condensats ABP 301 RE"      
+    },      
+    {        
+      "id": 9,        
+      "repereFonctionnel": "ABP 118 VL",        
+      "positionConstatee": "SO",        
+      "positionAttendue": "SF",        
+      "temperatureAmont": 29.2,        
+      "temperatureAval": 28.8,        
+      "temperatureAttendue": 30.0,
+      "description": "Réglante normal condensats ABP 202 RE"       }    ]
     },
     {
-      "niveau": "2",
-      "nomTechnicien": "Sophie Martin",
-      "vannes": [
-        {
-          "id": 4,
-          "repereFonctionnel": "Vanne principale",
-          "positionConstatee": "O",
-          "temperatureAmont": 29.8,
-          "temperatureAval": 28.9
-        },
-        {
-          "id": 5,
-          "repereFonctionnel": "Vanne secondaire",
-          "positionConstatee": "SF",
-          "temperatureAmont": 29.3,
-          "temperatureAval": 29.6
-        },
-        {
-          "id": 6,
-          "repereFonctionnel": "Vanne de sécurité",
-          "positionConstatee": "F",
-          "temperatureAmont": 28.7,
-          "temperatureAval": 28.2
-        }
-      ]
+  "tranche": "4",
+  "niveau": "2",
+  "annexe_description": "Réaliser les relevés au niveau + 6.00 m",
+  "localisation_groupe": "Vannes situés au plancher au dessus des pompes CVI, côté condenseur",
+  "nomTechnicien": "Sophie Martin",
+  "vannes": [
+    {
+      "id": 4,
+      "repereFonctionnel": "CVI 084 VV",
+      "positionConstatee": "O",
+      "positionAttendue": "O",
+      "temperatureAmont": 29.8,
+      "temperatureAval": 28.9,
+      "temperatureAttendue": 30.0,
+      "description": "Isolement VVP sur dégazage condenseur"
+    },
+    {
+      "id": 5,
+      "repereFonctionnel": "CVI 107 VV",
+      "positionConstatee": "SF",
+      "positionAttendue": "SF",
+      "temperatureAmont": 29.3,
+      "temperatureAval": 29.6,
+      "temperatureAttendue": 29.0,
+      "description": "By-pass CVI 084 VV"
+    },
+    {
+      "id": 6,
+      "repereFonctionnel": "CVI 085 VV",
+      "positionConstatee": "F",
+      "positionAttendue": "F",
+      "temperatureAmont": 28.7,
+      "temperatureAval": 28.2,
+      "temperatureAttendue": 28.0,
+      "description": "Isolement SVA sur dégazage condenseur"
     }
   ]
+}
+]
