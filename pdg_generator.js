@@ -59,4 +59,4 @@ async function createPdfForms(templatePath, dataPath, outputPath, temperatureAtt
     writeFileSync(`${outputPath}/Annexe_${niveauAnnexe}.pdf`, pdfBytes);
   }
 }
-createPdfForms('template.pdf', 'data.json', 'output', 30, ['O','F','SO','SF']);
+createPdfForms('testdoss/template.pdf', 'testdoss/data.json', 'testdoss/output', 30, ['O','F','SO','SF']);
