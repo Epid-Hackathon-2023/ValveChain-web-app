@@ -1,44 +1,62 @@
-const fs = require('fs');
-const { PDFDocument, StandardFonts } = require('pdf-lib');
+import { readFileSync, writeFileSync } from 'fs';
+import { PDFDocument, StandardFonts } from 'pdf-lib';
 
 /**
- * Remplit un formulaire PDF existant avec des données provenant d'un fichier JSON
+ * Crée un nouveau document PDF rempli avec des données de formulaire pour chaque vanne dans un fichier JSON
  * @param {string} templatePath - Le chemin d'accès au fichier PDF de modèle existant
- * @param {string} outputPath - Le chemin d'accès au fichier PDF rempli à enregistrer
- * @param {object} jsonData - Les données à insérer dans le formulaire PDF sous forme d'objet JSON
+ * @param {string} dataPath - Le chemin d'accès au fichier JSON de données de formulaire
+ * @param {string} outputPath - Le chemin d'accès au dossier où les fichiers PDF remplis seront enregistrés
+ * @param {number} temperatureAttendue - La température attendue pour chaque vanne
+ * @param {string[]} _positionsPossibles - Les différentes positions possibles pour la vanne
  */
-async function fillPdfForm(templatePath, outputPath, jsonData) {
-  // Charger le document PDF existant depuis le serveur NFS
-  const templateBytes = fs.readFileSync(templatePath);
+async function createPdfForms(templatePath, dataPath, outputPath, temperatureAttendue, _positionsPossibles) {
+  const templateBytes = readFileSync(templatePath);
+  const jsonData = JSON.parse(readFileSync(dataPath));
+  const helveticaFont = StandardFonts.Helvetica;
 
-  // Créer un nouveau document PDF basé sur le document existant
-  const pdfDoc = await PDFDocument.load(templateBytes);
+  for (const annexeData of jsonData) {
+    const niveauAnnexe = annexeData.niveau;
+    const vannesAnnexe = annexeData.vannes;
 
-  // Ajouter les données du formulaire aux champs de formulaire du document PDF
-  const form = pdfDoc.getForm();
-  const helveticaFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
+    const pdfDoc = await PDFDocument.load(templateBytes);
+    const form = pdfDoc.getForm();
+    const page = pdfDoc.getPages()[0];
 
-  const valveYPosition = jsonData.id;
-  
-  // Remplir le champ "Position Constatée" avec les données du fichier JSON
-  const positionConstateeField = form.createTextField('positionConstatee')
-  positionConstateeField.setText(jsonData.positionConstatee);
-  positionConstateeField.addToPage(page, { x: 451.2003, y: 464.92, size: 10 })
+    const drawText = (text, x, y, size) => {
+      const textWidth = helveticaFont.widthOfTextAtSize(text, size);
+      page.drawText(text, { x: x - textWidth / 2, y: y - size / 2, size: size, font: helveticaFont });
+    };
 
-  // Remplir le champ "Température relevée en Amont" avec les données du fichier JSON
-  const temperatureAmontField = form.createTextField('temperatureAmont');
-  temperatureAmontField.setText(jsonData.temperatureAmont);
-  positionConstateeField.addToPage(page, { x: 667.2004, y: 464.92, size: 10 })
+    drawText(`Niveau d'annexe: ${niveauAnnexe}`, 300, 750, 20);
 
-  // Remplir le champ "Température relevée en Aval" avec les données du fichier JSON
-  const temperatureAvalField = form.getTextField('Température relevée en Aval');
-  temperatureAvalField.setText(jsonData.temperatureAval);
+    let y = 700;
+    for (const vanneData of vannesAnnexe) {
+      const id = vanneData.id;
+      const repereFonctionnel = vanneData.repereFonctionnel;
+      const positionConstatee = vanneData.positionConstatee;
+      const temperatureAmont = vanneData.temperatureAmont;
+      const temperatureAval = vanneData.temperatureAval;
+      const temperatureMoyenne = (temperatureAmont + temperatureAval) / 2;
 
-  // Enregistrer le document PDF avec les champs de formulaire remplis
-  const pdfBytes = await pdfDoc.save();
-  fs.writeFileSync(outputPath, pdfBytes);
+      const comment = (temperatureMoyenne < temperatureAttendue - 5 || temperatureMoyenne > temperatureAttendue + 5)
+        ? 'Température anormale'
+        : (!vanneData.positionsPossibles.includes(positionConstatee))
+          ? 'Position anormale'
+          : 'OK';
+
+      drawText(`Vanne ID: ${id}`, 100, y, 15);
+      drawText(`Repère fonctionnel: ${repereFonctionnel}`, 200, y, 15);
+      drawText(`Position constatée: ${positionConstatee}`, 350, y, 15);
+      drawText(`Température constatée en amont: ${temperatureAmont}`, 500, y, 15);
+      drawText(`Température constatée en aval: ${temperatureAval}`, 650, y, 15);
+      drawText(`Température attendue: ${temperatureAttendue}`,800)
+      drawText(`Commentaire: ${comment}`, 950, y, 15);
+
+      y -= 50;
+    }
+
+    const pdfBytes = await pdfDoc.save();
+    writeFileSync(`${outputPath}/Annexe_${niveauAnnexe}.pdf`, pdfBytes);
+  }
 }
-
-// Exemple d'utilisation de la fonction fillPdfForm pour remplir un formulaire PDF existant avec des données provenant d'un fichier JSON
-const jsonData = JSON.parse(fs.readFileSync('/testdoss/data.json'));
-fillPdfForm('/testdoss/template.pdf', '/testdoss/filledForm.pdf', jsonData);
+createPdfForms('template.pdf', 'data.json', 'output', 30, ['O','F','SO','SF']);
