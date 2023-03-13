@@ -1,6 +1,56 @@
-{
-    "id": "ABP 116 VL",
-    "positionConstatee": "O",
-    "temperatureAmont": 25,
-    "temperatureAval": 30
-}
+[
+    {
+      "niveau": "1",
+      "nomTechnicien": "Jean Dupont",
+      "vannes": [
+        {
+          "id": 1,
+          "repereFonctionnel": "Vanne principale",
+          "positionConstatee": "O",
+          "temperatureAmont": 28.5,
+          "temperatureAval": 27.2
+        },
+        {
+          "id": 2,
+          "repereFonctionnel": "Vanne secondaire",
+          "positionConstatee": "F",
+          "temperatureAmont": 28.9,
+          "temperatureAval": 29.3
+        },
+        {
+          "id": 3,
+          "repereFonctionnel": "Vanne de sécurité",
+          "positionConstatee": "SO",
+          "temperatureAmont": 29.2,
+          "temperatureAval": 28.8
+        }
+      ]
+    },
+    {
+      "niveau": "2",
+      "nomTechnicien": "Sophie Martin",
+      "vannes": [
+        {
+          "id": 4,
+          "repereFonctionnel": "Vanne principale",
+          "positionConstatee": "O",
+          "temperatureAmont": 29.8,
+          "temperatureAval": 28.9
+        },
+        {
+          "id": 5,
+          "repereFonctionnel": "Vanne secondaire",
+          "positionConstatee": "SF",
+          "temperatureAmont": 29.3,
+          "temperatureAval": 29.6
+        },
+        {
+          "id": 6,
+          "repereFonctionnel": "Vanne de sécurité",
+          "positionConstatee": "F",
+          "temperatureAmont": 28.7,
+          "temperatureAval": 28.2
+        }
+      ]
+    }
+  ]
