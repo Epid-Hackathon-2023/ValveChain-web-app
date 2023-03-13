@@ -1,4 +1,5 @@
 const fs = require('fs');
+const { writeFileSync } = require('fs');
 const { PDFDocument, StandardFonts } = require('pdf-lib');
 
 /**
@@ -9,10 +10,10 @@ const { PDFDocument, StandardFonts } = require('pdf-lib');
  * @param {number} temperatureAttendue - La température attendue pour chaque vanne
  * @param {string[]} _positionsPossibles - Les différentes positions possibles pour la vanne
  */
+
 async function createPdfForms(templatePath, dataPath, outputPath, temperatureAttendue, _positionsPossibles) {
-  const templateBytes = readFileSync(templatePath);
-  const jsonData = JSON.parse(readFileSync(dataPath));
-  const helveticaFont = StandardFonts.Helvetica;
+  const templateBytes = fs.readFileSync(templatePath);
+  const jsonData = JSON.parse(fs.readFileSync(dataPath));
   const currentDate = new Date().toLocaleDateString("fr-FR");
 
   for (const annexeData of jsonData) {
@@ -21,6 +22,7 @@ async function createPdfForms(templatePath, dataPath, outputPath, temperatureAtt
     const nomTechnicien = annexeData.nomTechnicien;
 
     const pdfDoc = await PDFDocument.load(templateBytes);
+    const helveticaFont = pdfDoc.getForm().getDefaultFont(); // obtenir la police par défaut
     const form = pdfDoc.getForm();
     const page = pdfDoc.getPages()[0];
 
@@ -42,19 +44,21 @@ async function createPdfForms(templatePath, dataPath, outputPath, temperatureAtt
 
       const comment = (temperatureMoyenne < temperatureAttendue - 5 || temperatureMoyenne > temperatureAttendue + 5)
         ? 'Température anormale'
-        : (!vanneData.positionsPossibles.includes(positionConstatee))
+        : (!_positionsPossibles.includes(positionConstatee))
           ? 'Position anormale'
           : 'OK';
 
-      drawText(`Vanne ID: ${id}`, 100, y, 15);
-      drawText(`Repère fonctionnel: ${repereFonctionnel}`, 200, y, 15);
-      drawText(`Position constatée: ${positionConstatee}`, 350, y, 15);
-      drawText(`Température constatée en amont: ${temperatureAmont}`, 500, y, 15);
-      drawText(`Température constatée en aval: ${temperatureAval}`, 650, y, 15);
-      drawText(`Température attendue: ${temperatureAttendue}`,800, y, 15);
-      drawText(`Commentaire: ${comment}`, 950, y, 15);
-      drawText(`Technicien: ${nomTechnicien}`, 50, 800, 15);
-      drawText(`Date: ${currentDate}`, page.getWidth() - 50, 800, 15, { align: 'right' });
+      drawText(`Vanne ID: ${id}`, 300, y, 15);
+      y -= 20;
+      drawText(`Repère fonctionnel: ${repereFonctionnel}`, 100, y, 10);
+      drawText(`Position constatée: ${positionConstatee}`, 300, y, 10);
+      drawText(`Température constatée en amont: ${temperatureAmont}`, 500, y, 10);
+      y -= 20;
+      drawText(`Température constatée en aval: ${temperatureAval}`, 100, y, 10);
+      drawText(`Température attendue: ${temperatureAttendue}`,300, y, 10);
+      drawText(`Commentaire: ${comment}`, 500, y, 10);
+      drawText(`Technicien: ${nomTechnicien}`, 100, 800, 10);
+      drawText(`Date: ${currentDate}`, page.getWidth() - 100, 800, 10, { align: 'right' });
 
       y -= 50;
     }
@@ -63,4 +67,5 @@ async function createPdfForms(templatePath, dataPath, outputPath, temperatureAtt
     writeFileSync(`${outputPath}/Annexe_${niveauAnnexe}.pdf`, pdfBytes);
   }
 }
-createPdfForms('testdoss/template.pdf', 'testdoss/data.json', 'testdoss/output', 30, ['O','F','SO','SF']);
+
+createPdfForms('testdoss/template.pdf', 'testdoss/data.json', 'testdoss', 30, ['O','F','SO','SF']);
