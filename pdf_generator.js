@@ -1,5 +1,5 @@
-import { readFileSync, writeFileSync } from 'fs';
-import { PDFDocument, StandardFonts } from 'pdf-lib';
+const fs = require('fs');
+const { PDFDocument, StandardFonts } = require('pdf-lib');
 
 /**
  * Crée un nouveau document PDF rempli avec des données de formulaire pour chaque vanne dans un fichier JSON
