@@ -13,10 +13,12 @@ async function createPdfForms(templatePath, dataPath, outputPath, temperatureAtt
   const templateBytes = readFileSync(templatePath);
   const jsonData = JSON.parse(readFileSync(dataPath));
   const helveticaFont = StandardFonts.Helvetica;
+  const currentDate = new Date().toLocaleDateString("fr-FR");
 
   for (const annexeData of jsonData) {
     const niveauAnnexe = annexeData.niveau;
     const vannesAnnexe = annexeData.vannes;
+    const nomTechnicien = annexeData.nomTechnicien;
 
     const pdfDoc = await PDFDocument.load(templateBytes);
     const form = pdfDoc.getForm();
@@ -49,8 +51,10 @@ async function createPdfForms(templatePath, dataPath, outputPath, temperatureAtt
       drawText(`Position constatée: ${positionConstatee}`, 350, y, 15);
       drawText(`Température constatée en amont: ${temperatureAmont}`, 500, y, 15);
       drawText(`Température constatée en aval: ${temperatureAval}`, 650, y, 15);
-      drawText(`Température attendue: ${temperatureAttendue}`,800)
+      drawText(`Température attendue: ${temperatureAttendue}`,800, y, 15);
       drawText(`Commentaire: ${comment}`, 950, y, 15);
+      drawText(`Technicien: ${nomTechnicien}`, 50, 800, 15);
+      drawText(`Date: ${currentDate}`, page.getWidth() - 50, 800, 15, { align: 'right' });
 
       y -= 50;
     }
