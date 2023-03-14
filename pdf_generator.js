@@ -1,15 +1,17 @@
 const fs = require('fs');
 const { writeFileSync } = require('fs');
 const { PDFDocument, StandardFonts } = require('pdf-lib');
+const path = require('path');
 
 /**
  * Crée un nouveau document PDF rempli avec des données de formulaire pour chaque vanne dans un fichier JSON
  * @param {string} templatePath - Le chemin d'accès au fichier PDF de modèle existant
  * @param {string} dataPath - Le chemin d'accès au fichier JSON de données de formulaire
  * @param {string} outputPath - Le chemin d'accès au dossier où les fichiers PDF remplis seront enregistrés
+ * @param {string} inputPath - Le chemin d'accès au dossier où les fichiers PDF remplis seront enregistrés
  */
 
-async function createPdfForms(templatePath, dataPath, outputPath) {
+async function createPdfForms(templatePath, dataPath, inputPath, outputPath) {
   const templateBytes = fs.readFileSync(templatePath);
   const jsonData = JSON.parse(fs.readFileSync(dataPath));
   const currentDate = new Date().toLocaleDateString("fr-FR");
@@ -22,10 +24,11 @@ async function createPdfForms(templatePath, dataPath, outputPath) {
     const vannesAnnexe = annexeData.vannes;
     const nomTechnicien = annexeData.nomTechnicien;
 
-    const pdfDoc = await PDFDocument.load(templateBytes);
+    let pdfDoc = await PDFDocument.load(templateBytes);
     const helveticaFont = pdfDoc.getForm().getDefaultFont(); // obtenir la police par défaut
     const form = pdfDoc.getForm();
     let page = pdfDoc.getPages()[0];
+    const files = fs.readdirSync(inputPath);
 
     const drawText = (text, x, y, size) => {
       const textWidth = helveticaFont.widthOfTextAtSize(text, size);
@@ -58,16 +61,17 @@ async function createPdfForms(templatePath, dataPath, outputPath) {
           ? 'Position anormale'
           : 'OK';
 
-          if (y < 100) { // si la position Y actuelle est trop basse
-            page = pdfDoc.addPage(); // passer à la page suivante
-            y = page.getHeight() - 50; // réinitialiser la position Y
-          }
+      if (y < 100) { // si la position Y actuelle est trop basse
+        page = pdfDoc.addPage(); // passer à la page suivante
+        y = page.getHeight() - 50; // réinitialiser la position Y
+      }
         
           page.drawLine({
             start: { x: 50, y: y  },
             end: { x: page.getWidth() - 50, y: y },
             thickness: 1,
           });
+          
           
       y -= 20;
       //drawText(`Vanne ID: ${id}`, 300, y, 15);
@@ -87,10 +91,25 @@ async function createPdfForms(templatePath, dataPath, outputPath) {
 
       y -= 20;
     }
-
+    
     const pdfBytes = await pdfDoc.save();
-    writeFileSync(`${outputPath}/Annexe_${niveauAnnexe}.pdf`, pdfBytes);
+    writeFileSync(`${inputPath}/Annexe_${niveauAnnexe}.pdf`, pdfBytes);
+    
+    for (const file of files) {
+      if (file.endsWith('.pdf')) {
+        const bytes = fs.readFileSync(path.join(inputPath, file));
+        const doc = await PDFDocument.load(bytes);
+        const pages = await pdfDoc.copyPages(doc, doc.getPageIndices());
+      if(!pdfDoc) {
+        pdfDoc = await PDFDocument.create();
+      }
+      pages.forEach((page) => pdfDoc.addPage(page));
+    }
   }
+  const mergedPdfBytes = await pdfDoc.save();
+    writeFileSync(`${outputPath}/tournée.pdf`, mergedPdfBytes);
+  }  
+    
 }
 
-createPdfForms('testdoss/template.pdf', 'testdoss/data.json', 'testdoss');
+createPdfForms('testdoss/template.pdf', 'testdoss/data.json', 'testdoss/annexe', 'testdoss');
